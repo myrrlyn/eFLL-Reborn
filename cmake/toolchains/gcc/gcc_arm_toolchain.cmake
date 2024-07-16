@@ -20,18 +20,6 @@ if(NOT "${GCC_TOOLCHAIN_PATH}" STREQUAL "")
     set(ENV{GCC_TOOLCHAIN_PATH} "${GCC_TOOLCHAIN_PATH}")
 endif()
 
-# Workaround for CMake being weird with toolchain files and cache variables
-if(TOOLCHAIN_OPTIMIZATION_FLAG)
-    # Environment variables are always preserved.
-    set(ENV{_TOOLCHAIN_OPTIMIZATION_FLAG} "${TOOLCHAIN_OPTIMIZATION_FLAG}")
-else()
-    set(TOOLCHAIN_OPTIMIZATION_FLAG "$ENV{_TOOLCHAIN_OPTIMIZATION_FLAG}")
-endif()
-
-if(NOT TOOLCHAIN_OPTIMIZATION_FLAG)
-    message(FATAL_ERROR "Need to define optimization flag TOOLCHAIN_OPTIMIZATION_FLAG")
-endif()
-
 if(${TOOLCHAIN_ENABLE_LTO})
     set(ENV{_TOOLCHAIN_ENABLE_LTO} "${TOOLCHAIN_ENABLE_LTO}")
 endif()
