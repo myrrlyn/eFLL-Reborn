@@ -47,3 +47,5 @@ endfunction()
 add_unit_test(fuzzy_test FuzzyTest.cpp)
 # Don't add GeneralTest as it's actually just an int main() function
 # add_unit_test(general_test GeneralTest.cpp)
+
+add_unit_test(rebuild_test RebuildTest.cpp)

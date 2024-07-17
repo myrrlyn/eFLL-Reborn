@@ -12,6 +12,8 @@
  */
 #include "eFLL/FuzzyInput.h"
 
+#include <cstdio>
+
 // CONTRUCTORS
 FuzzyInput::FuzzyInput() :
     FuzzyIO()
@@ -41,6 +43,7 @@ bool FuzzyInput::calculateFuzzySetPertinences()
     // while not in the end of the array, iterate
     while (aux != NULL)
     {
+        fprintf(stderr, "1: computing pertinence\n");
         // call calculatePertinence for each FuzzySet
         aux->fuzzySet->calculatePertinence(this->crispInput);
         aux = aux->next;

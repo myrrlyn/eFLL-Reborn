@@ -1,11 +1,18 @@
 #pragma once
 
 #include <algorithm>
+#include <cstdio>
 #include <stdexcept>
 #include <type_traits>
 
 namespace efll
 {
+    /**
+     * @brief A group of four values representing a constrained region of fuzzy
+     * logic space.
+     *
+     * @details
+     */
     template <typename T>
     class FuzzyGroup
     {
@@ -13,6 +20,14 @@ namespace efll
 
       public:
         FuzzyGroup() = default;
+
+        /**
+         * @brief Constructs a group from four demarcation points.
+         *
+         * @note These points must be strictly monotonically increasing.
+         *
+         * This is the only exception-`throw`ing site in the codebase.
+         */
         FuzzyGroup(T a_, T b_, T c_, T d_) :
             a{a_},
             b{b_},
@@ -30,48 +45,64 @@ namespace efll
         T get_C() const { return c; }
         T get_D() const { return d; }
 
-        void compute_pertinence(T crispness)
+        T compute_pertinence(T crispness)
         {
+            fprintf(stderr, "2: computing pertinence with %f\n", crispness);
             if (crispness < a)
             {
-                y = static_cast<T>(all_lesser());
-                return;
+                fprintf(stderr, "2: x < A\n");
+                this->y = static_cast<T>(all_lesser());
             }
-
-            if (crispness < b)
+            else if (crispness < b)
             {
+                fprintf(stderr, "2: A < x < B\n");
                 T slope = 1.0 / (b - a);
-                y       = slope * (crispness - b) + 1.0;
-                return;
+                this->y = slope * (crispness - b) + 1.0;
             }
-
             // The original library switches from exclusive to inclusive here.
-            if (crispness <= c)
+            else if (crispness <= c)
             {
-                y = 1.0;
-                return;
+                fprintf(stderr, "2: B < x < C\n");
+                this->y = 1.0;
             }
-
-            if (crispness <= d)
+            else if (crispness <= d)
             {
+                fprintf(stderr, "2: C < x < D\n");
                 T slope = 1.0 / (c - d);
-                y       = slope * (crispness - c) + 1.0;
-                return;
+                this->y = slope * (crispness - c) + 1.0;
+            }
+            else
+            {
+                fprintf(stderr, "2: D < x\n");
+                this->y = static_cast<T>(all_greater());
             }
 
-            y = static_cast<T>(all_greater());
+            fprintf(stderr, "2: y: %f\n", this->y);
+            return this->y;
         }
 
         /// @brief Raise the pertinence value of this group.
         /// @details Only applies the new value if it is greater than the current.
         /// @param pertinence The new pertinence value.
-        void set_pertinence(T pertinence) { y = std::max(y, pertinence); }
+        void set_pertinence(T pertinence)
+        {
+            fprintf(stderr, "2: changing pert to %f\n", std::max(this->y, pertinence));
+            this->y = std::max(this->y, pertinence);
+        }
 
         /// @brief Get the group's pertinence value.
-        T get_pertinence() const { return y; }
+        T get_pertinence() const
+        {
+            fprintf(stderr, "2: getting pertinence %f\n", this->y);
+            return this->y;
+        }
 
         /// @brief Set the group pertinence back to zero.
-        void reset_pertinence() { y = 0.0; }
+        void reset_pertinence()
+        {
+            fprintf(stderr, "2: resetting\n");
+            this->y = 0.0;
+        }
 
         /// @brief Check if this group represents "everything smaller is true".
         bool all_lesser() const { return a == b && b != c && c != d; }

@@ -12,6 +12,8 @@
  */
 #include "eFLL/FuzzySet.h"
 
+#include <cstdio>
+
 // CONTRUCTORS
 FuzzySet::FuzzySet()
 {
@@ -58,6 +60,7 @@ bool FuzzySet::calculatePertinence(float crispValue)
     // check the crispValue is small then A
     if (crispValue < this->a)
     {
+        fprintf(stderr, "1: x < A\n");
         // check if this FuzzySet represents "everithing small is true"
         if (this->a == this->b && this->b != this->c && this->c != this->d)
         {
@@ -73,6 +76,7 @@ bool FuzzySet::calculatePertinence(float crispValue)
     // check if the crispValue is between A and B
     else if (crispValue >= this->a && crispValue < this->b)
     {
+        fprintf(stderr, "1: A < x < B\n");
         // calculate a slope
         float slope = 1.0 / (this->b - this->a);
         // calculate the value of pertinence
@@ -81,11 +85,13 @@ bool FuzzySet::calculatePertinence(float crispValue)
     // check if the pertinence is between B and C
     else if (crispValue >= this->b && crispValue <= this->c)
     {
+        fprintf(stderr, "1: B < x < C\n");
         this->pertinence = 1.0;
     }
     // check if the pertinence is between C and D
     else if (crispValue > this->c && crispValue <= this->d)
     {
+        fprintf(stderr, "1: C < x < D\n");
         // calculate a slope
         float slope = 1.0 / (this->c - this->d);
         // calculate the value of pertinence
@@ -94,6 +100,7 @@ bool FuzzySet::calculatePertinence(float crispValue)
     // check the crispValue is bigger then D
     else if (crispValue > this->d)
     {
+        fprintf(stderr, "1: D < x\n");
         // check if this FuzzySet represents "everithing bigger is true"
         if (this->c == this->d && this->c != this->b && this->b != this->a)
         {
@@ -106,6 +113,7 @@ bool FuzzySet::calculatePertinence(float crispValue)
             this->pertinence = 0.0;
         }
     }
+    fprintf(stderr, "p: %f\n", pertinence);
     return true;
 }
 

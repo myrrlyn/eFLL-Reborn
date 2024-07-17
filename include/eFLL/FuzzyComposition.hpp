@@ -159,10 +159,13 @@ namespace efll
         static constexpr T EPSILON = 1.0e-3;
 
       private:
-        using store = std::list<Point<T>>;
+        using points = std::list<Point<T>>;
         std::list<Point<T>> m_points;
 
-        bool rebuild(store::iterator a0, store::iterator a1, store::iterator b0, store::iterator b1)
+        bool rebuild(::std::list<Point<T>>::iterator a0,
+                     ::std::list<Point<T>>::iterator a1,
+                     ::std::list<Point<T>>::iterator b0,
+                     ::std::list<Point<T>>::iterator b1)
         {
             T denominator = std::fabs((b1->y - b0->y) * (a1->x - a0->x) - (b1->x - b0->x) * (a1->y - a0->y));
             T numerator_a = std::fabs((b1->x - b0->x) * (a0->y - b0->y) - (b1->y - b0->y) * (a0->x - b0->x));

@@ -2,8 +2,8 @@
 
 #include <cstddef>
 #include <cstdlib>
-#include <deque>
 #include <type_traits>
+#include <vector>
 
 #include "eFLL/FuzzyGroup.hpp"
 
@@ -46,9 +46,15 @@ namespace efll
         }
 
       protected:
+        /// @brief An index within a larger collection.
         std::size_t m_index = 0;
-        T m_crispness       = 0.0;
-        std::deque<FuzzyGroup<T>> m_groups{};
+
+        /// @brief A crispness value used to compute the pertinence for various
+        /// groups.
+        T m_crispness = 0.0;
+
+        /// @brief A collection of fuzzy regions.
+        std::vector<FuzzyGroup<T>> m_groups{};
 
         void clear_groups() { m_groups.clear(); }
     };
